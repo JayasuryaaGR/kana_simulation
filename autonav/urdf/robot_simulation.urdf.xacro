@@ -1,0 +1,10 @@
+<?xml version='1.0'?>
+<robot name="kana" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- <xacro:include filename="$(find gryffindors)/urdf/gryffindors_robot.gazebo" /> -->
+  <xacro:include filename="$(find autonav)/urdf/robot.urdf.xacro" />
+  <!-- <xacro:include filename="$(find gryffindors)/urdf/gryffindors_robot.gazebo" /> -->
+  <xacro:include filename="$(find autonav)/urdf/robot.rviz.xacro" />
+  <xacro:include filename="$(find autonav)/urdf/robot.gazebo" />
+
+</robot>

@@ -1,0 +1,69 @@
+<launch>
+    <!-- Robot pose -->
+    <arg name="x_robot" default="2"/>
+    <arg name="y_robot" default="-3"/>
+    <arg name="z_robot" default="0"/>
+    <arg name="roll_robot" default="0"/>
+    <arg name="pitch_robot" default="0"/>
+    <arg name="yaw_robot" default="0"/>
+
+    <arg name="model" default="$(find autonav)/urdf/robot_simulation.urdf.xacro"/>
+    <arg name="rate" default="10" />
+
+    <param name="robot_description" command="$(find xacro)/xacro '$(arg model)'" />
+
+    <!-- <rosparam file="$(find autonav)/config/robot_control.yaml" command="load"/> -->
+
+    <include file="$(find rplidar_ros)/launch/rplidar.launch" />
+
+    <!-- <include file="$(find autonav)/launch/world.launch" /> -->
+    <!-- <node name="robot_spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-param robot_description -urdf -model kana
+            -x $(arg x_robot) -y $(arg y_robot) -z $(arg z_robot)
+            -R $(arg roll_robot) -P $(arg pitch_robot) -Y $(arg yaw_robot)" /> -->
+    
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find autonav)/include/rviz.rviz" />
+    
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen" >
+        <!-- <remap from="/joint_states" to="/kana/joint_states" />  -->
+    </node>
+
+    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+        args="joint_state_controller
+              front_left_wheel_joint_effort_controller
+              front_right_wheel_joint_effort_controller
+              rear_left_wheel_joint_effort_controller
+              rear_right_wheel_joint_effort_controller" /> -->
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+        <!-- <remap from="/joint_states" to="/kana/joint_states" /> -->
+    </node>
+
+    <!-- <node name="twist_to_motors" pkg="autonav" type="twist_to_motors.py" /> -->
+    <!-- <node name="diff_tf" pkg="autonav" type="diff_tf.py" /> -->
+
+    <node pkg="gmapping" type="slam_gmapping" name="gmapping">
+        <param name="base_frame" value="base_link" />
+        <param name="odom_frame" value="odom" />
+        <param name="delta" value="0.1" />
+    </node>
+
+    <!-- <node pkg="move_base" type="move_base" name="move_base" respawn="false" output="screen">
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+        <rosparam file="$(find autonav)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find autonav)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+        <rosparam file="$(find autonav)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find autonav)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find autonav)/config/move_base_params.yaml" command="load" />
+        <rosparam file="$(find autonav)/config/dwa_local_planner.yaml" command="load" />
+    </node>
+
+    <include file="$(find autonav)/launch/amcl.launch">
+        <arg name="initial_pose_x" value="$(arg x_robot)"/>
+        <arg name="initial_pose_y" value="$(arg y_robot)"/>
+    </include>
+
+    <arg name="map_file" default="$(find autonav)/map/kana_map.pgm" />
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find autonav)/map/kana_map.yaml" /> -->
+    
+</launch>
